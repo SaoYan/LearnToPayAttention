@@ -39,7 +39,7 @@ def weights_init_xavierUniform(module):
             nn.init.uniform_(m.weight, a=0, b=1)
             nn.init.constant_(m.bias, val=0.)
         elif isinstance(m, nn.Linear):
-            nn.init.xavier_uniform_(m.weight, gain=1)
+            nn.init.xavier_uniform_(m.weight, gain=np.sqrt(2))
             if m.bias is not None:
                 nn.init.constant_(m.bias, val=0.)
 
@@ -53,6 +53,6 @@ def weights_init_xavierNormal(module):
             nn.init.normal_(m.weight, 0, 0.01)
             nn.init.constant_(m.bias, val=0.)
         elif isinstance(m, nn.Linear):
-            nn.init.xavier_normal_(m.weight, gain=1)
+            nn.init.xavier_normal_(m.weight, gain=np.sqrt(2))
             if m.bias is not None:
                 nn.init.constant_(m.bias, val=0.)

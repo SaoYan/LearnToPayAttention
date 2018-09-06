@@ -2,15 +2,15 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from blocks import ConvBlock, LinearAttentionBlock, ProjectorBlock
-from initialize import weights_init_xavierUniform as weights_init
+from initialize import *
 
 '''
-linear attention before max-pooling
+attention before max-pooling
 '''
 
-class AttnVGG(nn.Module):
-    def __init__(self, in_size, num_classes, attention=True):
-        super(AttnVGG, self).__init__()
+class AttnVGG_before(nn.Module):
+    def __init__(self, im_size, num_classes, attention=True, init='xavierUniform'):
+        super(AttnVGG_before, self).__init__()
         self.attention = attention
         # conv blocks
         self.conv_block1 = ConvBlock(3, 64, 2)
@@ -19,7 +19,7 @@ class AttnVGG(nn.Module):
         self.conv_block4 = ConvBlock(256, 512, 3)
         self.conv_block5 = ConvBlock(512, 512, 3)
         self.conv_block6 = ConvBlock(512, 512, 2, pool=True)
-        self.dense = nn.Conv2d(in_channels=512, out_channels=512, kernel_size=int(in_size/32), padding=0, bias=True)
+        self.dense = nn.Conv2d(in_channels=512, out_channels=512, kernel_size=int(im_size/32), padding=0, bias=True)
         # Projectors & Compatibility functions
         if self.attention:
             self.projector = ProjectorBlock(256, 512)
@@ -32,7 +32,16 @@ class AttnVGG(nn.Module):
         else:
             self.classify = nn.Linear(in_features=512, out_features=num_classes, bias=True)
         # initialize
-        weights_init(self)
+        if init == 'kaimingNormal':
+            weights_init_kaimingNormal(self)
+        elif init == 'kaimingUniform':
+            weights_init_kaimingUniform(self)
+        elif init == 'xavierNormal':
+            weights_init_xavierNormal(self)
+        elif init == 'xavierUniform':
+            weights_init_xavierUniform(self)
+        else:
+            raise NotImplementedError("Invalid type of initialization!")
     def forward(self, x):
         # feed forward
         x = self.conv_block1(x)

@@ -9,7 +9,8 @@ import torch.optim.lr_scheduler as lr_scheduler
 import torchvision
 import torchvision.utils as utils
 import torchvision.transforms as transforms
-from model1 import AttnVGG
+from model1 import AttnVGG_before
+from model2 import AttnVGG_after
 from utilities import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -20,6 +21,8 @@ parser.add_argument("--batch_size", type=int, default=128, help="batch size")
 parser.add_argument("--epochs", type=int, default=300, help="number of epochs")
 parser.add_argument("--lr", type=float, default=0.1, help="initial learning rate")
 parser.add_argument("--outf", type=str, default="logs", help='path of log files')
+parser.add_argument("--initialize", type=str, default="xavierUniform", help='kaimingNormal or kaimingUniform or xavierNormal or xavierUniform')
+parser.add_argument("--attn_mode", type=str, default="after", help='insert attention modules before / after maxpooling layers')
 parser.add_argument("--no_attention", action='store_true', help='turn down attention')
 
 opt = parser.parse_args()
@@ -47,7 +50,17 @@ def main():
     print('done')
     # load network
     print('\nloading the network ...\n')
-    net = AttnVGG(in_size=im_size, num_classes=100, attention=not opt.no_attention)
+    if not opt.no_attention:
+        print('\nturn on attention ...\n')
+        print('\npay attention %s maxpooling layers...\n' % opt.attn_mode)
+    else:
+        print('\nturn off attention ...\n')
+    if opt.attn_mode == 'before':
+        net = AttnVGG_before(im_size=im_size, num_classes=100, attention=not opt.no_attention, init=opt.initialize)
+    elif opt.attn_mode == 'after':
+        net = AttnVGG_after(im_size=im_size, num_classes=100, attention=not opt.no_attention, init=opt.initialize)
+    else:
+        raise NotImplementedError("Invalid attention mode!")
     criterion = nn.CrossEntropyLoss()
     # move to GPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -69,6 +82,7 @@ def main():
         images_test_disp = []
         # adjust learning rate
         scheduler.step()
+        writer.add_scalar('train/learning_rate', optimizer.param_groups[0]['lr'], epoch)
         print("\nepoch %d learning rate %f\n" % (epoch, optimizer.param_groups[0]['lr']))
         # run for one epoch
         for aug in range(num_aug):
@@ -79,7 +93,7 @@ def main():
                 optimizer.zero_grad()
                 inputs, labels = data
                 inputs, labels = inputs.to(device), labels.to(device)
-                if i == 0: # archive images in order to save to logs
+                if aug == 0 & i == 0: # archive images in order to save to logs
                     images_test_disp.append(inputs[0:16,:,:,:])
                 # forward
                 pred, __, __, __ = model.forward(inputs)
@@ -125,12 +139,16 @@ def main():
             print("\n[epoch %d] accuracy on test data: %.2f%%\n" % (epoch, 100*correct/total))
             # log images
             if not opt.no_attention:
+                if opt.attn_mode == 'before':
+                    min_up_factor = 1
+                elif opt.attn_mode == 'after':
+                    min_up_factor = 2
                 # training data
                 __, c1, c2, c3 = model.forward(images_test_disp[0])
                 I = utils.make_grid(images_test_disp[0], nrow=4, normalize=True, scale_each=True)
-                attn1 = visualize_attn_softmax(I, c1, up_factor=2, nrow=4)
-                attn2 = visualize_attn_softmax(I, c2, up_factor=4, nrow=4)
-                attn3 = visualize_attn_softmax(I, c3, up_factor=8, nrow=4)
+                attn1 = visualize_attn_softmax(I, c1, up_factor=min_up_factor, nrow=4)
+                attn2 = visualize_attn_softmax(I, c2, up_factor=min_up_factor*2, nrow=4)
+                attn3 = visualize_attn_softmax(I, c3, up_factor=min_up_factor*4, nrow=4)
                 writer.add_image('train/image', I, epoch)
                 writer.add_image('train/attention_map_1', attn1, epoch)
                 writer.add_image('train/attention_map_2', attn2, epoch)
@@ -138,9 +156,9 @@ def main():
                 # test data
                 __, c1, c2, c3 = model.forward(images_test_disp[1])
                 I = utils.make_grid(images_test_disp[1], nrow=4, normalize=True, scale_each=True)
-                attn1 = visualize_attn_softmax(I, c1, up_factor=2, nrow=4)
-                attn2 = visualize_attn_softmax(I, c2, up_factor=4, nrow=4)
-                attn3 = visualize_attn_softmax(I, c3, up_factor=8, nrow=4)
+                attn1 = visualize_attn_softmax(I, c1, up_factor=min_up_factor, nrow=4)
+                attn2 = visualize_attn_softmax(I, c2, up_factor=min_up_factor*2, nrow=4)
+                attn3 = visualize_attn_softmax(I, c3, up_factor=min_up_factor*4, nrow=4)
                 writer.add_image('test/image', I, epoch)
                 writer.add_image('test/attention_map_1', attn1, epoch)
                 writer.add_image('test/attention_map_2', attn2, epoch)
