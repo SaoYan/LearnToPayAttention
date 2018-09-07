@@ -93,7 +93,7 @@ def main():
                 optimizer.zero_grad()
                 inputs, labels = data
                 inputs, labels = inputs.to(device), labels.to(device)
-                if aug == 0 & i == 0: # archive images in order to save to logs
+                if (aug == 0) and (i == 0): # archive images in order to save to logs
                     images_test_disp.append(inputs[0:16,:,:,:])
                 # forward
                 pred, __, __, __ = model.forward(inputs)
