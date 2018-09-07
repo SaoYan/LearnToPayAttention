@@ -36,6 +36,7 @@ The x-axis is # iter
 ![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_attn_before.png)
 
 2. Pay attention after max-pooling layers  
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_attn_after.png)
 
 ### Training curve - accuracy on test data  
 
@@ -45,6 +46,7 @@ The x-axis is # epoch
 ![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_attn_before.png)
 
 2. Pay attention after max-pooling layers  
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_attn_after.png)
 
 ### Quantitative results (on test data of CIFAR-100)  
 
@@ -54,7 +56,10 @@ The x-axis is # epoch
 
 ### Attention map visualization (on test data of CIFAR-100)  
 
+From left to right: L1, L2, L3, original images
+
 1. Pay attention before max-pooling layers  
 ![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/attn_map_before.png)
 
 2. Pay attention after max-pooling layers  
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/attn_map_after.png)
