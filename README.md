@@ -13,7 +13,7 @@ I implemented two version of the model, the only difference is whether to insert
 * OpenCV
 * [tensorboardX](https://github.com/lanpa/tensorboardX)  
 
-#NOTE# If you are using PyTorch 0.4, then replace *torch.nn.functional.interpolate* by *[torch.nn.Upsample]*(https://pytorch.org/docs/stable/nn.html#upsample). (Modify the code in utilities.py).  
+**NOTE** If you are using PyTorch 0.4, then replace *torch.nn.functional.interpolate* by *[torch.nn.Upsample]*(https://pytorch.org/docs/stable/nn.html#upsample). (Modify the code in utilities.py).  
 
 ## Training  
 1. Pay attention before max-pooling layers  
