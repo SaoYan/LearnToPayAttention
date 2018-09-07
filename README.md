@@ -33,20 +33,26 @@ python train.py --attn_mode after --outf logs_after
 The x-axis is # iter
 
 1. Pay attention before max-pooling layers  
-![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_attn_before.png)
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_attn_before.png)  
 
 2. Pay attention after max-pooling layers  
-![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_attn_after.png)
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_attn_after.png)  
+
+3. Plot in one figure  
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/loss_compare.png)  
 
 ### Training curve - accuracy on test data  
 
 The x-axis is # epoch  
 
 1. Pay attention before max-pooling layers  
-![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_attn_before.png)
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_attn_before.png)  
 
 2. Pay attention after max-pooling layers  
-![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_attn_after.png)
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_attn_after.png)  
+
+3. Plot in one figure  
+![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/test_acc_compare.png)  
 
 ### Quantitative results (on test data of CIFAR-100)  
 
