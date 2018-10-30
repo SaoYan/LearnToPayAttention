@@ -9,7 +9,7 @@ attention after max-pooling
 '''
 
 class AttnVGG_after(nn.Module):
-    def __init__(self, im_size, num_classes, attention=True, init='xavierUniform'):
+    def __init__(self, im_size, num_classes, attention=True, normalize_attn=True, init='xavierUniform'):
         super(AttnVGG_after, self).__init__()
         self.attention = attention
         # conv blocks
@@ -23,9 +23,9 @@ class AttnVGG_after(nn.Module):
         # Projectors & Compatibility functions
         if self.attention:
             self.projector = ProjectorBlock(256, 512)
-            self.attn1 = LinearAttentionBlock(512)
-            self.attn2 = LinearAttentionBlock(512)
-            self.attn3 = LinearAttentionBlock(512)
+            self.attn1 = LinearAttentionBlock(in_features=512, normalize_attn=normalize_attn)
+            self.attn2 = LinearAttentionBlock(in_features=512, normalize_attn=normalize_attn)
+            self.attn3 = LinearAttentionBlock(in_features=512, normalize_attn=normalize_attn)
         # final classification layer
         if self.attention:
             self.classify = nn.Linear(in_features=512*3, out_features=num_classes, bias=True)
