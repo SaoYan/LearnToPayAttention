@@ -36,5 +36,4 @@ def visualize_attn_sigmoid(I, c, up_factor, nrow):
     attn = np.float32(attn) / 255
     # add the heatmap to the image
     vis = 0.6 * img + 0.4 * attn
-    print([torch.max(a).item(),torch.min(a).item(),torch.mean(a).item()])
     return torch.from_numpy(vis).permute(2,0,1)
