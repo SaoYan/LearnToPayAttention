@@ -19,8 +19,8 @@ I implemented two version of the model, the only difference is whether to insert
 
 ## (New!) Pre-trained models
 
-[Google drive link](https://drive.google.com/open?id=1-s0rXWSSTZ23-o3KjKaxqaol8MnA8PvR)
-(Coming soon)
+[Google drive link](https://drive.google.com/open?id=1-s0rXWSSTZ23-o3KjKaxqaol8MnA8PvR)  
+[Alternative link(Baidu Cloud Disk)](https://pan.baidu.com/s/1tbKse1ewF3siiHm_OkhQow)
 
 ## Dependences  
 
