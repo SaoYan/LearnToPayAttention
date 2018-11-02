@@ -8,21 +8,19 @@ PyTorch implementation of ICLR 2018 paper [Learn To Pay Attention](http://www.ro
 
 ***
 ## Most Recent Updates  
-* Oct. 29, 2018: Add the implementation of "grid attention" module.  
+* Oct. 29, 2018: Add the implementation of "grid attention" module (NOT tested on CIFAR100 or any other dataset. Feel free to do your own experiments).  
 Reference paper: https://arxiv.org/abs/1804.05338  
 Reference code: https://github.com/ozan-oktay/Attention-Gated-Networks
-* Oct. 29, 2018: Other updates
-  * Fix the random seeds so that the results can be reproduced
-  * Release the pre-trained models
+<!-- * Oct. 29, 2018: Release the pre-trained models -->
 ***
 
 My implementation is based on "(VGG-att3)-concat-pc" in the paper, and I trained the model on CIFAR-100 DATASET.  
 I implemented two version of the model, the only difference is whether to insert the attention module before or after the corresponding max-pooling layer.
 
-## (New!) Pre-trained models
+<!-- ## (New!) Pre-trained models
 
-<!-- [Google drive link](https://drive.google.com/open?id=1-s0rXWSSTZ23-o3KjKaxqaol8MnA8PvR) -->
-(Coming soon)
+[Google drive link](https://drive.google.com/open?id=1-s0rXWSSTZ23-o3KjKaxqaol8MnA8PvR)
+(Coming soon) -->
 
 ## Dependences  
 
@@ -41,11 +39,6 @@ python train.py --attn_mode before --outf logs_before --normalize_attn --log_ima
 2. Pay attention after max-pooling layers  
 ```
 python train.py --attn_mode after --outf logs_after --normalize_attn --log_images
-```
-
-3. (New!) Use grid attention
-```
-python train.py --attn_mode grid --outf logs_grid --normalize_attn --log_images
 ```
 
 ## Results  
@@ -91,9 +84,3 @@ From left to right: L1, L2, L3, original images
 
 2. Pay attention after max-pooling layers  
 ![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/attn_map_after.png)
-
-### (New!) Grid attention module
-
-(Coming soon)
-<!-- * Top-1 error
-* Attention map visualization -->

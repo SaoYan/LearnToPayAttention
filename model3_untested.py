@@ -5,7 +5,7 @@ from blocks import ConvBlock, GridAttentionBlock
 from initialize import *
 
 '''
-attention after max-pooling
+grid attention (one possible implementation)
 '''
 
 class AttnVGG_grid(nn.Module):

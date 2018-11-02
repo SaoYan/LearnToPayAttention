@@ -12,16 +12,10 @@ import torchvision.utils as utils
 import torchvision.transforms as transforms
 from model1 import AttnVGG_before
 from model2 import AttnVGG_after
-from model3 import AttnVGG_grid
 from utilities import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-
-base_seed = 0
-torch.backends.cudnn.deterministic = True
-torch.manual_seed(base_seed)
-torch.cuda.manual_seed_all(base_seed)
 
 parser = argparse.ArgumentParser(description="LearnToPayAttn-CIFAR100")
 
@@ -29,7 +23,7 @@ parser.add_argument("--batch_size", type=int, default=128, help="batch size")
 parser.add_argument("--epochs", type=int, default=300, help="number of epochs")
 parser.add_argument("--lr", type=float, default=0.1, help="initial learning rate")
 parser.add_argument("--outf", type=str, default="logs", help='path of log files')
-parser.add_argument("--attn_mode", type=str, default="after", help='insert attention modules before OR after maxpooling layers OR use grid attention')
+parser.add_argument("--attn_mode", type=str, default="after", help='insert attention modules before OR after maxpooling layers')
 
 parser.add_argument("--normalize_attn", action='store_true', help='if True, attention map is normalized by softmax; otherwise use sigmoid')
 parser.add_argument("--no_attention", action='store_true', help='turn down attention')
@@ -53,8 +47,6 @@ def main():
         transforms.ToTensor(),
         transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
     ])
-    def _init_fn(worker_id):
-        random.seed(base_seed + worker_id)
     trainset = torchvision.datasets.CIFAR100(root='CIFAR100_data', train=True, download=True, transform=transform_train)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batch_size, shuffle=True, num_workers=8, worker_init_fn=_init_fn)
     testset = torchvision.datasets.CIFAR100(root='CIFAR100_data', train=False, download=True, transform=transform_test)
@@ -78,9 +70,6 @@ def main():
         print('\npay attention after maxpooling layers...\n')
         net = AttnVGG_after(im_size=im_size, num_classes=100,
             attention=not opt.no_attention, normalize_attn=opt.normalize_attn, init='xavierUniform')
-    elif opt.attn_mode == 'grid':
-        print('\nuse grid attention...\n')
-        net = AttnVGG_grid(num_classes=100, normalize_attn=opt.normalize_attn, init='kaimingNormal')
     else:
         raise NotImplementedError("Invalid attention mode!")
     criterion = nn.CrossEntropyLoss()
