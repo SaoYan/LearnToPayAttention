@@ -111,7 +111,7 @@ def main():
                 if (aug == 0) and (i == 0): # archive images in order to save to logs
                     images_disp.append(inputs[0:36,:,:,:])
                 # forward
-                pred, __, __, __ = model.forward(inputs)
+                pred, __, __, __ = model(inputs)
                 # backward
                 loss = criterion(pred, labels)
                 loss.backward()
@@ -119,7 +119,7 @@ def main():
                 # display results
                 if i % 10 == 0:
                     model.eval()
-                    pred, __, __, __ = model.forward(inputs)
+                    pred, __, __, __ = model(inputs)
                     predict = torch.argmax(pred, 1)
                     total = labels.size(0)
                     correct = torch.eq(predict, labels).sum().double().item()
@@ -146,7 +146,7 @@ def main():
                 images_test, labels_test = images_test.to(device), labels_test.to(device)
                 if i == 0: # archive images in order to save to logs
                     images_disp.append(inputs[0:36,:,:,:])
-                pred_test, __, __, __ = model.forward(images_test)
+                pred_test, __, __, __ = model(images_test)
                 predict = torch.argmax(pred_test, 1)
                 total += labels_test.size(0)
                 correct += torch.eq(predict, labels_test).sum().double().item()
@@ -173,7 +173,7 @@ def main():
                 else:
                     vis_fun = visualize_attn_sigmoid
                 # training data
-                __, c1, c2, c3 = model.forward(images_disp[0])
+                __, c1, c2, c3 = model(images_disp[0])
                 if c1 is not None:
                     attn1 = vis_fun(I_train, c1, up_factor=min_up_factor, nrow=6)
                     writer.add_image('train/attention_map_1', attn1, epoch)
@@ -184,7 +184,7 @@ def main():
                     attn3 = vis_fun(I_train, c3, up_factor=min_up_factor*4, nrow=6)
                     writer.add_image('train/attention_map_3', attn3, epoch)
                 # test data
-                __, c1, c2, c3 = model.forward(images_disp[1])
+                __, c1, c2, c3 = model(images_disp[1])
                 if c1 is not None:
                     attn1 = vis_fun(I_test, c1, up_factor=min_up_factor, nrow=6)
                     writer.add_image('test/attention_map_1', attn1, epoch)
