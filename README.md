@@ -6,14 +6,6 @@ PyTorch implementation of ICLR 2018 paper [Learn To Pay Attention](http://www.ro
 
 ![](https://github.com/SaoYan/LearnToPayAttention/blob/master/fig/learn_to_pay_attn.png)
 
-***
-## Most Recent Updates  
-* Oct. 29, 2018: Add the implementation of "grid attention" module (NOT tested on CIFAR100 or any other dataset. Feel free to do your own experiments).  
-Reference paper: https://arxiv.org/abs/1804.05338  
-Reference code: https://github.com/ozan-oktay/Attention-Gated-Networks
-* Nov. 2, 2018: Release the pre-trained models
-***
-
 My implementation is based on "(VGG-att3)-concat-pc" in the paper, and I trained the model on CIFAR-100 DATASET.  
 I implemented two version of the model, the only difference is whether to insert the attention module before or after the corresponding max-pooling layer.
 
