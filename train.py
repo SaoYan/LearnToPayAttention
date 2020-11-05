@@ -31,6 +31,12 @@ parser.add_argument("--log_images", action='store_true', help='log images and (i
 
 opt = parser.parse_args()
 
+def _worker_init_fn_():
+    torch_seed = torch.initial_seed()
+    np_seed = torch_seed // 2**32-1
+    random.seed(torch_seed)
+    np.random.seed(np_seed)
+
 def main():
     ## load data
     # CIFAR-100: 500 training images and 100 testing images per class
@@ -48,7 +54,7 @@ def main():
         transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
     ])
     trainset = torchvision.datasets.CIFAR100(root='CIFAR100_data', train=True, download=True, transform=transform_train)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batch_size, shuffle=True, num_workers=8, worker_init_fn=_init_fn)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batch_size, shuffle=True, num_workers=8, worker_init_fn=_worker_init_fn_)
     testset = torchvision.datasets.CIFAR100(root='CIFAR100_data', train=False, download=True, transform=transform_test)
     testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=5)
     print('done')
